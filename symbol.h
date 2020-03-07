@@ -2,19 +2,27 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "assembly.h"
 
 #define SYMBOL_MAX_LENGTH 32
 #define EXT_VALUE 0
+#define TRUE 1
+#define FALSE 0
+#define E 1
+#define R 2
+#define A 4
+#define LOAD_SPACE 100
+#define MAX_LINE 81
+/*-------------VARIABLES-----------------------*/
+extern word *memory;
+extern int line_counter;
+extern unsigned char error_flag,second_pass_flag;
+extern short IC;
+/*-------------ENUMS-----------------------*/
 
-//-------------VARIABLES-----------------------
-extern memory;
-extern line_counter;
-extern error_flag;
-//-------------ENUMS-----------------------
+extern enum line_type{code,data,string,entry,external}; /*locations of symbols*/
 
-enum line_type{code,data,string,entry,external}; //locations of symbols
-
-//-------------TYPEDEF-----------------------
+/*-------------TYPEDEF-----------------------*/
 
 /*defining the struct symbol*/
 typedef struct sym{
@@ -24,7 +32,18 @@ typedef struct sym{
     struct sym *next_symbol;
 }symbol;
 
-//-----------Functions------------------------
+typedef unsigned char BOOL; 
+
+/*-----------Functions------------------------*/
 
 void add_symbol(char * ,int ,enum line_type);
 void add_extern(char *);
+int add_entry(char *);
+void update_data_symbol(); /*update the value of data and string to +100*/
+int get_symbol_amount(enum line_type); /*returns the amount of the symbols from the recived type*/
+void print_symbols(FILE *,enum line_type);
+void add_entry_symbol(char *,int);
+BOOL isSavedPhrase(char *);
+
+
+
